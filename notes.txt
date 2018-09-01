@@ -1,0 +1,45 @@
+NOTE: Just because it says 'createfile' doesn't mean it was actually trying to create a file. It can read a file with that (at least thats what I think it's doing.) I'm just going off Process Monitor
+
+QueryOpen /Heat_Signature.exe.Local
+QueryOpen /VERSION.dll
+CreateFile /data.win
+CreateFile /Heat_Signature.yydebug
+CreateFile /font.png
+CreateFile /splash.png
+CreateFile /Logs/Log.txt
+CreateFile /Received.dat
+CreateFile /Controls.txt
+CreateFile /BlockList.txt
+CreateFile /Workshop/Items/Item0-19.dat *
+
+CreateFile /Glitchers/DecoBrig_c.png
+CreateFile /Glitchers/DecoLivingBunks_c.png
+CreateFile /Glitchers/DecoLivingGreen_c.png
+CreateFile /Glitchers/DecoLivingMess_c.png
+CreateFile /Glitchers/DecoLivingToilets_c.png
+CreateFile /Glitchers/DecoMedical_c.png
+CreateFile /Glitchers/DecoOtherEngineering_c.png
+CreateFile /Glitchers/DecoOtherJunk_c.png
+CreateFile /Glitchers/DecoOtherJunk2_c.png
+CreateFile /Glitchers/DecoSecurityIntel_c.png
+
+CreateFile /Foundry/DecoMedical_c.png
+CreateFile /Foundry/DecoOtherConv_c.png
+CreateFile /Foundry/DecoOtherFan_c.png
+
+CreateFile /Offworld Security/DecoLivingGym1_c.png
+CreateFile /Offworld Security/DecoLivingMess1_c.png
+CreateFile /Offworld Security/DecoSecurity_c.png
+
+CreateFile /Sovereign/DecoLivingDesks_c.png
+CreateFile /Sovereign/DecoLivingSofa_c.png
+CreateFile /Sovereign/DecoOtherTech1_c.png
+CreateFile /Sovereign/DecoOtherTech2_c.png
+CreateFile /Sovereign/DecoSecuritySparring.png
+
+CreateFile /Independent
+
+CreateFile /Progress.dat
+
+CreateFile /Options.txt
+
