@@ -1,3 +1,24 @@
+Dialogue Notes:
+? is for optional.
+
+[header]
+AskText?
+=ContinueText?
+=ContinueText2?
+=ContinueTextN?
+#AnswerText {Link}?
+
+all of the text can have variables: <variable name> (known one is PlayerName, PersonalMissionCost, PersonalMissionTarget)
+
+AskText is text which the character you're speaking with says to you. It can go onto the next line which makes it annoying to parse
+ContinueText starts with an equal sign. Basically, it shows up when you get an option to 'Continue'/'Back'
+AnswerText starts with a #. It's what you're givin the option to choose from. It seems to always contain a link.
+A Link is a 'link' to another header via name. Dunno if it's cross file, don't think it would be though.
+	- {End} seems to be a custom non-listed header to end the current dialogue
+I believe some of the dialogue stuff is handled in code, as the empty [EndGame] tag presumably ends the game (I actually haven't gotten to the game end, yet)
+Also, the virtual-reality-testing will {End} but still be able to go onto continuing it so it's likely also handled in the code of the game. (Perhaps search the exe?)
+
+Things It opens/Tries accessing. Some of them exist in %appdata%/Heat_Signature
 NOTE: Just because it says 'createfile' doesn't mean it was actually trying to create a file. It can read a file with that (at least thats what I think it's doing.) I'm just going off Process Monitor
 
 QueryOpen /Heat_Signature.exe.Local
