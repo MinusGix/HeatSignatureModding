@@ -19,12 +19,12 @@ function writeConfig () {
 	console.log("Saved Config");
 }
 
-let possibleGameDirectories = [
-	"C:\\Program Files (x86)\\Steam\\steamapps\\common\\Heat Signature\\",
-	"C:\\Program Files\\Steam\\steamapps\\common\\Heat Signature\\",
-];
-
 function findGameDirectory () {
+	let possibleGameDirectories = [
+		"C:\\Program Files (x86)\\Steam\\steamapps\\common\\Heat Signature\\",
+		"C:\\Program Files\\Steam\\steamapps\\common\\Heat Signature\\",
+	];
+
 	let dir;
 
 	for (let i = 0; i < possibleGameDirectories.length; i++) {
