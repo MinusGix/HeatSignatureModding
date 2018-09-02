@@ -37,23 +37,31 @@ function parseBack (dialogues) {
 	let text = '';
 	let textMap = (val) => {
 		if (typeof(val) === 'string') {
-			return val.trim();
+			return val;
 		} else if (val.type === 'variable') {
 			return '<' + val.name + '>';
 		} else if (val.type === 'link') {
 			return '{' + val.name + '}';
 		} else if (val.type === 'next') {
-			return '\n=' + val.text.trim();
+			return '\n=' + val.text;
 		}
 	};
 	for (let i = 0; i < dialogues.length; i++) {
 		let dg = dialogues[i];
 
-		text += `[${dg.header}]
-${dg.ask.map(textMap).join('')}
-${dg.answers.map((val) => '#' + val.map(textMap).join('')).join('\n')}
+		text += `[${dg.header}]`;
 
-`;
+		let ask = dg.ask.map(textMap).join('').trim();
+
+		text += '\n' + ask;
+
+		let answers = dg.answers.map(val => '#' + val.map(textMap).join('')).join('\n').trim();
+
+		text += '\n' + answers;
+		text += '\n';
+//		${dg.ask.map(textMap).join('')}
+//${dg.answers.map((val) => '#' + val.map(textMap).join('')).join('\n')}
+//`;
 	}
 	
 	return text;
