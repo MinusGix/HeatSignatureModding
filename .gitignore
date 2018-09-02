@@ -1,3 +1,4 @@
 output/*
 test/*
 node_modules
+/config.json

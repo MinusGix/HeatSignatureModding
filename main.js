@@ -4,19 +4,24 @@ const path = require('path');
 
 let parseControls = require('./parseControls/index.js').parseControls;
 let parseDialogue = require('./parseDialogue/index.js');
-let {config, readConfig, writeConfig} = require('./config.js');
+let {
+	config,
+	readConfig,
+	writeConfig,
+	findGameDirectory
+} = require('./config.js');
 readConfig();
 
 let gameDirectory = config.gameDirectory;
 
-function testControlsParse () {
+function testControlsParse() {
 	let file = fs.readFileSync(gameDirectory + "DefaultControls.txt", "utf8");
 
 	fs.writeFileSync('./test/Controls.txt', parseControls(file).convertToText(), 'utf8');
 	console.log("Wrote ./test/Controls.txt, generated from DefaultControls.txt");
 }
 
-function dialogueParse (readpath, output="./output/{filename}.json") {
+function dialogueParse(readpath, output = "./output/{filename}.json") {
 	let file = fs.readFileSync(readpath, "utf8");
 
 	let filename = path.win32.basename(readpath, ".txt");
@@ -28,13 +33,13 @@ function dialogueParse (readpath, output="./output/{filename}.json") {
 	return output;
 }
 
-function dialogueParseBack (readpath, output="./output/{filename}.txt") {
+function dialogueParseBack(readpath, output = "./output/{filename}.txt") {
 	let file = fs.readFileSync(readpath, 'utf8');
 
 	let filename = path.win32.basename(readpath, ".json");
 
 	output = output.replace(/\{filename\}/ig, filename);
-	
+
 	console.log("Filename:", filename, "\n\toutput:", output);
 
 	fs.writeFileSync(output, parseDialogue.parseBack(JSON.parse(file)));
@@ -44,40 +49,72 @@ function dialogueParseBack (readpath, output="./output/{filename}.txt") {
 
 prompt.start();
 
-console.log(`(0) Exit
-(1) - Test Controls Parse
-(2) - Test Dialogue Parse
-(3) - Test Dialogue Parse Back
-(4) - Test Dialogue Parse & Parse Back`);
+function showMainMenu() {
+	console.log(`(0) Exit
+(1) - Config Settings
+(2) - Test Controls Parse
+(3) - Test Dialogue Parse
+(4) - Test Dialogue Parse Back
+(5) - Test Dialogue Parse & Parse Back`);
 
-prompt.get({
-	type: 'integer',
-	message: "Input must be an integer",
-	default: 2,
-	required: true	
-}, (err, result) => {
-	let input = Number(result.question);
+	prompt.get({
+		type: 'integer',
+		message: "Input must be an integer",
+		default: 0,
+		required: true
+	}, (err, result) => {
+		let input = Number(result.question);
 
-	switch (input) {
-		case 0: process.exit(0); break;
-		case 1: testControlsParse(); break;
-		case 2: 
-			getPath(value => dialogueParse(value));
-		break;
-		case 3: 
-			getPath(value => dialogueParseBack(value));
-		break;
-		case 4:
-			getPath(value => {
-				let output = dialogueParse(value);
+		switch (input) {
+			case 0:
+				process.exit(0);
+				break;
+			case 1:
+				showConfigureMenu();
+			break;
+			case 2:
+				testControlsParse();
+				break;
+			case 3:
+				getPath(value => dialogueParse(value));
+				break;
+			case 4:
+				getPath(value => dialogueParseBack(value));
+				break;
+			case 5:
+				getPath(value => {
+					let output = dialogueParse(value);
 
-				let output2 = dialogueParseBack(output);
-			});
-		break;
-	}
-});
+					let output2 = dialogueParseBack(output);
+				});
+				break;
+		}
+	});
+}
 
-function getPath (cb) {
+function showConfigureMenu () {
+	console.log(`(0) Back
+(1) - Choose Game Directory`);
+
+	prompt.get({
+		type: 'integer',
+		message: "Input must be an integer",
+		default: 0,
+		required: true
+	}, (err, result) => {
+		let input = Number(result.question);
+
+		switch (input) {
+			case 0:
+				return showMainMenu();
+			case 1:
+				findGameDirectory();
+			break;
+		}
+	})
+}
+
+function getPath(cb) {
 	prompt.get({
 		type: 'string',
 		message: 'Value must be a string',
@@ -93,3 +130,5 @@ function getPath (cb) {
 		cb(value.replace(/\{gamedir\}/ig, gameDirectory));
 	});
 }
+
+showMainMenu();
