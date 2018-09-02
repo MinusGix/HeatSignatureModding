@@ -37,13 +37,13 @@ function parseBack (dialogues) {
 	let text = '';
 	let textMap = (val) => {
 		if (typeof(val) === 'string') {
-			return val;
+			return val.trim();
 		} else if (val.type === 'variable') {
 			return '<' + val.name + '>';
 		} else if (val.type === 'link') {
 			return '{' + val.name + '}';
 		} else if (val.type === 'next') {
-			return '\n=' + val.text;
+			return '\n=' + val.text.trim();
 		}
 	};
 	for (let i = 0; i < dialogues.length; i++) {
