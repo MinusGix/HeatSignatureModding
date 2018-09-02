@@ -4,9 +4,10 @@ const path = require('path');
 
 let parseControls = require('./parseControls/index.js').parseControls;
 let parseDialogue = require('./parseDialogue/index.js');
+let {config, readConfig, writeConfig} = require('./config.js');
+readConfig();
 
-let gameDirectory = "F:\\SteamLibrary\\steamapps\\common\\Heat Signature\\";
-let DialogTestFile = "Dialog\\FiascoPersonalMissionStart.txt";
+let gameDirectory = config.gameDirectory;
 
 function testControlsParse () {
 	let file = fs.readFileSync(gameDirectory + "DefaultControls.txt", "utf8");
