@@ -59,9 +59,6 @@ function parseBack (dialogues) {
 
 		text += '\n' + answers;
 		text += '\n';
-//		${dg.ask.map(textMap).join('')}
-//${dg.answers.map((val) => '#' + val.map(textMap).join('')).join('\n')}
-//`;
 	}
 	
 	return text;
