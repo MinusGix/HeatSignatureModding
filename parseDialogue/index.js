@@ -1,4 +1,4 @@
-let shouldLog = false;
+let shouldLog = true;
 let tab = 0;
 function log (...data) {
 	if (shouldLog) {
@@ -170,7 +170,7 @@ function parseText (text, index, isAnswer=false, allowBracket=false) {
 			break;
 		} else if (text[index] === '\r' || text[index] === '\n') {
 			log("Newline");
-			index = consumeWhitespace(text, index);
+			//index = consumeWhitespace(text, index);
 
 			if (text[index] === '=') { // That weird newline/newmessage thing.
 				log("Found newline =");
@@ -184,7 +184,16 @@ function parseText (text, index, isAnswer=false, allowBracket=false) {
 			} else if (text[index] === '[') {
 				break;
 			} else {
-				break;
+				if (typeof(valText[current]) === 'string') {
+					valText[current] += text[index];
+				} else if (typeof(valText[current]) === 'object' && valText[current].type === 'next') {
+					valText[current].text += text[index];
+				} else {
+					valText.push(text[index]);
+					current++;
+				}
+				index++;
+				//break;
 			}
 		} else if (text[index] === '<') { // a variable.
 			tab++;
