@@ -25,6 +25,7 @@ function readConfig (callback=(() => null)) {
 // Creates the config if it doesn't exist
 function createConfig (callback) {
 	fs.access(configFile, fs.constants.F_OK, (err) => {
+		console.log(err);
 		if (err) { // doesn't exist
 			writeConfig(callback);
 		} else {
@@ -45,7 +46,7 @@ function writeConfig (callback=(() => null)) {
 	})
 }
 
-function findGameDirectory () {
+function findGameDirectory (callback=(() => null)) {
 	let possibleGameDirectories = [
 		"C:\\Program Files (x86)\\Steam\\steamapps\\common\\Heat Signature\\",
 		"C:\\Program Files\\Steam\\steamapps\\common\\Heat Signature\\",
@@ -60,10 +61,10 @@ function findGameDirectory () {
 		}
 	}
 
-	askCorrectnessOfGameDirectory(dir);
+	askCorrectnessOfGameDirectory(dir, callback);
 }
 
-function askCorrectnessOfGameDirectory (dir) {
+function askCorrectnessOfGameDirectory (dir, callback=(() => null)) {
 	if (dir) {
 		console.log("Found a game directory, is this the right one? (Y/n)");
 		prompt.get({
@@ -76,17 +77,18 @@ function askCorrectnessOfGameDirectory (dir) {
 			if (/^(y|yes|true)$/i.test(answer)) {
 				console.log("Thank you. If this is incorrect you can change it later by running this program and selecting the correct option.");
 				config.gameDirectory = dir;
+				callback();
 			} else if (/^(n|no|false)$/i.test(answer)) {
 				console.log("Okay!");
-				askGameDirectory();
+				askGameDirectory(callback);
 			}
 		})
 	} else {
-		askGameDirectory();
+		askGameDirectory(callback);
 	}
 }
 
-function askGameDirectory () {
+function askGameDirectory (callback) {
 	console.log("Please enter the game directory for Heat Signature:");
 
 	prompt.get(["directory"], (err, result) => {
@@ -99,7 +101,7 @@ function askGameDirectory () {
 
 		config.gameDirectory = dir;
 		console.log("Set game directory to:", config.gameDirectory, "\nIf this was incorrect, then just acess the mnu from the program.");
-		writeConfig();
+		writeConfig(() => callback());
 	});
 }
 
