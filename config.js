@@ -5,7 +5,7 @@ let configFile = "./config.json";
 let config = {};
 
 function readConfig (callback=(() => null)) {
-	fs.readFile(configFile, (err, data) => {
+	createConfig(() => fs.readFile(configFile, (err, data) => {
 		if (err) {
 			throw err;
 		}
@@ -17,6 +17,17 @@ function readConfig (callback=(() => null)) {
 		console.log("Read Config");
 
 		callback();
+	}));
+}
+
+// Creates the config if it doesn't exist
+function createConfig (callback) {
+	fs.access(configFile, fs.constants.F_OK, (err) => {
+		if (err) { // doesn't exist
+			writeConfig(callback);
+		} else {
+			callback();
+		}
 	});
 }
 
