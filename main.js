@@ -10,12 +10,9 @@ let {
 	writeConfig,
 	findGameDirectory
 } = require('./config.js');
-readConfig();
-
-let gameDirectory = config.gameDirectory;
 
 function testControlsParse() {
-	let file = fs.readFileSync(gameDirectory + "DefaultControls.txt", "utf8");
+	let file = fs.readFileSync(config.gameDirectory + "DefaultControls.txt", "utf8");
 
 	fs.writeFileSync('./test/Controls.txt', parseControls(file).convertToText(), 'utf8');
 	console.log("Wrote ./test/Controls.txt, generated from DefaultControls.txt");
@@ -127,8 +124,8 @@ function getPath(cb) {
 			return console.log("Must be given a value.")
 		}
 
-		cb(value.replace(/\{gamedir\}/ig, gameDirectory));
+		cb(value.replace(/\{gamedir\}/ig, config.gameDirectory));
 	});
 }
 
-showMainMenu();
+readConfig(() => showMainMenu());

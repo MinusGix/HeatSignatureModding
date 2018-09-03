@@ -4,19 +4,32 @@ const prompt = require('prompt');
 let configFile = "./config.json";
 let config = {};
 
-function readConfig () {
-	let temp_config = JSON.parse(fs.readFileSync(configFile, "utf8"));
+function readConfig (callback=(() => null)) {
+	fs.readFile(configFile, (err, data) => {
+		if (err) {
+			throw err;
+		}
 
-	for (let i in temp_config) {
-		config[i] = temp_config[i]; // Copy the parameters, This makes so the module.export's is always up to date
-	}
+		for (let i in temp_config) {
+			config[i] = temp_config[i]; // Copy the parameters, This makes so the module.export's is always up to date
+		}
+	
+		console.log("Read Config");
 
-	console.log("Read Config");
+		callback();
+	});
 }
 
-function writeConfig () {
-	fs.writeFileSync(configFile, JSON.stringify(config, null, 4), "utf8");
-	console.log("Saved Config");
+function writeConfig (callback=(() => null)) {
+	fs.writeFile(configFile, JSON.stringify(config, null, 4), "utf8", err => {
+		if (err) {
+			throw err;
+		}
+
+		console.log("Saved Config");
+		
+		callback();
+	})
 }
 
 function findGameDirectory () {
