@@ -8,7 +8,8 @@ let {
 	config,
 	readConfig,
 	writeConfig,
-	findGameDirectory
+	findGameDirectory,
+	findDataDirectory,
 } = require('./config.js');
 
 function testControlsParse() {
@@ -105,7 +106,10 @@ function showConfigureMenu () {
 			case 0:
 				return showMainMenu();
 			case 1:
-				findGameDirectory();
+				findGameDirectory(showConfigureMenu);
+				break;
+			case 2:
+				findDataDirectory(showConfigureMenu);
 			break;
 		}
 	})
