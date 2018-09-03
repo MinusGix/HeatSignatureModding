@@ -10,8 +10,10 @@ function readConfig (callback=(() => null)) {
 			throw err;
 		}
 
-		for (let i in temp_config) {
-			config[i] = temp_config[i]; // Copy the parameters, This makes so the module.export's is always up to date
+		data = JSON.parse(data);
+
+		for (let i in data) {
+			config[i] = data[i]; // Copy the parameters, This makes so the module.export's is always up to date
 		}
 	
 		console.log("Read Config");
