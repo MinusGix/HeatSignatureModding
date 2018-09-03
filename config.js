@@ -27,7 +27,7 @@ function createConfig (callback) {
 	fs.access(configFile, fs.constants.F_OK, (err) => {
 		console.log(err);
 		if (err) { // doesn't exist
-			writeConfig(callback);
+			findGameDirectory(callback);
 		} else {
 			callback();
 		}
