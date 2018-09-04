@@ -5,6 +5,7 @@ const path = require('path');
 let parseControls = require('./parseControls/index.js').parseControls;
 let parseDialogue = require('./parseDialogue/index.js');
 let parseNames = require('./parseNames/index.js');
+let parseOptions = require('./parseOptions/index.js');
 let {
 	config,
 	readConfig,
@@ -72,6 +73,32 @@ function nameParseBack(readpath, output = "./output/{filename}.txt") {
 	return output;
 }
 
+function optionsParse (readpath, output = "./output/{filename}.json") {
+	let file = fs.readFileSync(readpath, "utf8");
+
+	let filename = path.win32.basename(readpath, ".txt");
+
+	output = output.replace(/\{filename\}/ig, filename);
+	console.log("Filename:", filename, "\n\toutput:", output);
+	fs.writeFileSync(output, JSON.stringify(parseOptions.parse(file), null, 4), "utf8");
+	console.log("Wrote " + filename + ", generated from " + readpath);
+	return output;
+}
+
+function optionsParseBack(readpath, output = "./output/{filename}.txt") {
+	let file = fs.readFileSync(readpath, "utf8");
+
+	let filename = path.win32.basename(readpath, ".json");
+
+	output = output.replace(/\{filename\}/ig, filename);
+
+	console.log("Filename:", filename, "\n\toutput:", output);
+
+	fs.writeFileSync(output, parseOptions.parseBack(JSON.parse(file)));
+	console.log("Wrote " + filename + ", generated from " + readpath);
+	return output;
+}
+
 prompt.start();
 
 function showMainMenu() {
@@ -79,7 +106,8 @@ function showMainMenu() {
 (1) - Config Settings
 (2) - Control Parsing
 (3) - Dialogue Parsing
-(4) - Name Parsing`);
+(4) - Name Parsing
+(5) - Options Parsing`);
 
 	prompt.get({
 		type: 'integer',
@@ -104,6 +132,9 @@ function showMainMenu() {
 			break;
 			case 4:
 				showNameMenu();
+			break;
+			case 5:
+				showOptionsMenu();
 			break;
 		}
 	});
@@ -189,6 +220,37 @@ function showNameMenu () {
 			break;
 			case 3:
 				getPath(value => nameParseBack(nameParse(value)));
+			break;
+		}
+	});
+}
+
+function showOptionsMenu () {
+	console.log(`(0) Back
+(1) - Test Options Parse
+(2) - Test Options Parse Back
+(3) - Test Options Parse & Parse Back`);
+
+	prompt.get({
+		type: 'integer',
+		message: "Input must be an integer",
+		default: 0,
+		required: true
+	}, (err, result) => {
+		let input = Number(result.question);
+
+		switch (input) {
+			case 0:
+				showMainMenu();
+			break;
+			case 1:
+				getPath(value => optionsParse(value));
+			break;
+			case 2:
+				getPath(value => optionsParseBack(value));
+			break;
+			case 3:
+				getPath(value => optionsParseBack(optionsParse(value)));
 			break;
 		}
 	});
