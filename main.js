@@ -77,13 +77,9 @@ prompt.start();
 function showMainMenu() {
 	console.log(`(0) Exit
 (1) - Config Settings
-(2) - Test Controls Parse
-(3) - Test Dialogue Parse
-(4) - Test Dialogue Parse Back
-(5) - Test Dialogue Parse & Parse Back
-(6) - Test Names Parse
-(7) - Test Names Parse Back
-(8) - Test Names Parse & Parse Back`);
+(2) - Control Parsing
+(3) - Dialogue Parsing
+(4) - Name Parsing`);
 
 	prompt.get({
 		type: 'integer',
@@ -101,32 +97,107 @@ function showMainMenu() {
 				showConfigureMenu();
 			break;
 			case 2:
-				testControlsParse();
-				break;
+				showControlsMenu();
+			break;
 			case 3:
-				getPath(value => dialogueParse(value));
-				break;
+				showDialogueMenu();
+			break;
 			case 4:
+				showNameMenu();
+			break;
+		}
+	});
+}
+
+function showControlsMenu () {
+	console.log(`(0) Back
+(1) - Test Controls Parse`);
+
+	prompt.get({
+		type: 'integer',
+		message: "Input must be an integer",
+		default: 0,
+		required: true
+	}, (err, result) => {
+		let input = Number(result.question);
+
+		switch (input) {
+			case 0:
+				showMainMenu();
+			break;
+			case 1:
+				testControlsParse();
+			break;
+		}
+	});
+}
+
+function showDialogueMenu () {
+	console.log(`(0) Back
+(1) - Test Dialogue Parse
+(2) - Test Dialogue Parse Back
+(3) - Test Dialogue Parse & Parse Back`);
+
+	prompt.get({
+		type: 'integer',
+		message: "Input must be an integer",
+		default: 0,
+		required: true
+	}, (err, result) => {
+		let input = Number(result.question);
+
+		switch (input) {
+			case 0:
+				showMainMenu();
+			break;
+			case 1:
+				getPath(value => dialogueParse(value));
+			break;
+			case 2:
 				getPath(value => dialogueParseBack(value));
-				break;
-			case 5:
+			break;
+			case 3:
 				getPath(value => {
 					let output = dialogueParse(value);
 
 					let output2 = dialogueParseBack(output);
 				});
-				break;
-			case 6:
+			break;
+		}
+	});
+}
+
+function showNameMenu () {
+	console.log(`(0) Back
+(1) - Test Name Parse
+(2) - Test Name Parse Back
+(3) - Test Name Parse & Parse Back`);
+
+	prompt.get({
+		type: 'integer',
+		message: "Input must be an integer",
+		default: 0,
+		required: true
+	}, (err, result) => {
+		let input = Number(result.question);
+
+		switch (input) {
+			case 0:
+				showMainMenu();
+			break;
+			case 1:
 				getPath(value => nameParse(value));
-				break;
-			case 7:
+			break;
+			case 2:
 				getPath(value => nameParseBack(value));
-				break;
-			case 8:
+			break;
+			case 3:
 				getPath(value => {
-					nameParseBack(nameParse(value))
+					let output = nameParse(value);
+
+					let output2 = nameParseBack(output);
 				});
-				break;
+			break;
 		}
 	});
 }
