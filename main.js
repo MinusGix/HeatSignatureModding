@@ -157,11 +157,7 @@ function showDialogueMenu () {
 				getPath(value => dialogueParseBack(value));
 			break;
 			case 3:
-				getPath(value => {
-					let output = dialogueParse(value);
-
-					let output2 = dialogueParseBack(output);
-				});
+				getPath(value => dialogueParseBack(dialogueParse(value)));
 			break;
 		}
 	});
@@ -192,11 +188,7 @@ function showNameMenu () {
 				getPath(value => nameParseBack(value));
 			break;
 			case 3:
-				getPath(value => {
-					let output = nameParse(value);
-
-					let output2 = nameParseBack(output);
-				});
+				getPath(value => nameParseBack(nameParse(value)));
 			break;
 		}
 	});
