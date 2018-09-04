@@ -4,6 +4,7 @@ const path = require('path');
 
 let parseControls = require('./parseControls/index.js').parseControls;
 let parseDialogue = require('./parseDialogue/index.js');
+let parseNames = require('./parseNames/index.js');
 let {
 	config,
 	readConfig,
@@ -45,6 +46,32 @@ function dialogueParseBack(readpath, output = "./output/{filename}.txt") {
 	return output;
 }
 
+function nameParse (readpath, output = "./output/{filename}.json") {
+	let file = fs.readFileSync(readpath, "utf8");
+
+	let filename = path.win32.basename(readpath, ".txt");
+
+	output = output.replace(/\{filename\}/ig, filename);
+	console.log("Filename:", filename, "\n\toutput:", output);
+	fs.writeFileSync(output, JSON.stringify(parseNames.parse(file), null, 4), "utf8");
+	console.log("Wrote " + filename + ", generated from " + readpath);
+	return output;
+}
+
+function nameParseBack(readpath, output = "./output/{filename}.txt") {
+	let file = fs.readFileSync(readpath, "utf8");
+
+	let filename = path.win32.basename(readpath, ".json");
+
+	output = output.replace(/\{filename\}/ig, filename);
+
+	console.log("Filename:", filename, "\n\toutput:", output);
+
+	fs.writeFileSync(output, parseNames.parseBack(JSON.parse(file)));
+	console.log("Wrote " + filename + ", generated from " + readpath);
+	return output;
+}
+
 prompt.start();
 
 function showMainMenu() {
@@ -53,7 +80,10 @@ function showMainMenu() {
 (2) - Test Controls Parse
 (3) - Test Dialogue Parse
 (4) - Test Dialogue Parse Back
-(5) - Test Dialogue Parse & Parse Back`);
+(5) - Test Dialogue Parse & Parse Back
+(6) - Test Names Parse
+(7) - Test Names Parse Back
+(8) - Test Names Parse & Parse Back`);
 
 	prompt.get({
 		type: 'integer',
@@ -84,6 +114,17 @@ function showMainMenu() {
 					let output = dialogueParse(value);
 
 					let output2 = dialogueParseBack(output);
+				});
+				break;
+			case 6:
+				getPath(value => nameParse(value));
+				break;
+			case 7:
+				getPath(value => nameParseBack(value));
+				break;
+			case 8:
+				getPath(value => {
+					nameParseBack(nameParse(value))
 				});
 				break;
 		}
