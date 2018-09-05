@@ -43,8 +43,6 @@ let special = {
 function parse (text) {
 	let arr = text.match(/(?:^)(.+)(?:\ =\ )(.*?)(?:$)/gm);
 
-	console.log(arr);
-
 	let obj = {};
 
 	arr.forEach(pair => {
@@ -68,7 +66,7 @@ function parse (text) {
 	});
 
 	return obj;
-}// TODO: make so when it parses back, booleans become 0 / 1 (perhaps should store their initial value just in case of odd setups...)
+}
 
 function parseBack (obj) {
 	// Doesn't do .join('\n') as the \n in the map produces a little bit closer to the original.
