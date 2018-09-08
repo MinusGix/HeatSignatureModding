@@ -1,4 +1,3 @@
-// C:\Users\Minus\AppData\Roaming\Heat_Signature\Galaxy 1\Characters\Magic Love.dat
 function parse (text, encoded=true) {
 	let data = text.split(/(?:\n|\r\n|\r)/);
 
