@@ -370,4 +370,22 @@ function getPath(cb) {
 	});
 }
 
+function getYesNo (cb) { // awful name
+	prompt.get({
+		type: 'string',
+		default: 'y',
+		pattern: /^(y|yes|true|n|no|false)$/i
+	}, (err, result) => {
+		let answer = result.question;
+
+		if (/^(y|yes|true)$/i.test(answer)) {
+			callback(true);
+		} else if (/^(n|no|false)$/i.test(answer)) {
+			callback(false);
+		} else {
+			throw new Error("Not given valid answer.");
+		}
+	});
+}
+
 readConfig(() => showMainMenu());
