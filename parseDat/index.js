@@ -1,11 +1,11 @@
 // C:\Users\Minus\AppData\Roaming\Heat_Signature\Galaxy 1\Characters\Magic Love.dat
-function parse (text) {
+function parse (text, encoded=true) {
 	let data = text.split(/(?:\n|\r\n|\r)/);
 
 	let index = 0;
 
 	let sections = [];
-
+	
 	// all of the first headers seem to be not in base64, thankfully
 	[sections[sections.length], index] = parseSection(data, index, false);
 	
@@ -17,7 +17,7 @@ function parse (text) {
 				break;
 			}
 
-			[sections[sections.length], index] = parseSection(data, index, true);
+			[sections[sections.length], index] = parseSection(data, index, encoded);
 
 			index = consumeEmpty(data, index);
 		} catch (err) {

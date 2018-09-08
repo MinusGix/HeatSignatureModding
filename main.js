@@ -100,14 +100,14 @@ function optionsParseBack(readpath, output = "./output/{filename}.txt") {
 	return output;
 }
 
-function datParse (readpath, output = "./output/{filename}.json") {
+function datParse (readpath, output = "./output/{filename}.json", encoded=true) {
 	let file = fs.readFileSync(readpath, "utf8");
 
 	let filename = path.win32.basename(readpath, ".dat");
 
 	output = output.replace(/\{filename\}/ig, filename);
 	console.log("Filename:", filename, "\n\toutput:", output);
-	fs.writeFileSync(output, JSON.stringify(parseDat.parse(file), null, 4), "utf8");
+	fs.writeFileSync(output, JSON.stringify(parseDat.parse(file, encoded), null, 4), "utf8");
 	console.log("Wrote " + filename + ", generated from " + readpath);
 	return output;
 }
@@ -293,9 +293,7 @@ function showDatMenu () {
 	console.log(`(0) Back
 (1) - Test Dat Parse
 (2) - Test Dat Parse Back
-(3) - Test Dat Parse Back Unencoded
-(4) - Test Dat Parse & Parse Back
-(5) - Test Dat Parse & Parse Back Unencoded`);
+(3) - Test Dat Parse & Parse Back`);
 
 	prompt.get({
 		type: 'integer',
@@ -310,19 +308,25 @@ function showDatMenu () {
 				showMainMenu();
 			break;
 			case 1:
-				getPath(value => datParse(value));
+				getPath(value => {
+					console.log("Is the file encoded?");
+					getYesNo(bool => datParse(value, undefined, bool));
+				});
 			break;
 			case 2:
-				getPath(value => datParseBack(value));
+				getPath(value => {
+					console.log("Force it to be written to a file unencoded?");
+					getYesNo(bool => datParseBack(value, undefined, bool));
+				});
 			break;
 			case 3:
-				getPath(value => datParseBack(value, undefined, true));
-			break;
-			case 4:
-				getPath(value => datParseBack(datParse(value)));
-			break;
-			case 5:
-				getPath(value => datParseBack(datParse(value), undefined, true));
+				getPath(value => {
+					console.log("Is the file encoded?");;
+					getYesNo(bool => {
+						console.log("Force it to be written to a file unencoded?");
+						getYesNo(bool2 => datParseBack(datParse(value, undefined, bool), undefined, bool2));
+					});
+				});
 			break;
 		}
 	});
@@ -370,7 +374,7 @@ function getPath(cb) {
 	});
 }
 
-function getYesNo (cb) { // awful name
+function getYesNo (callback) { // awful name
 	prompt.get({
 		type: 'string',
 		default: 'y',
