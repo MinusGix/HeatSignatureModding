@@ -5,9 +5,11 @@ function parse (text, encoded=true) {
 	let index = 0;
 
 	let sections = [];
-	
-	// all of the first headers seem to be not in base64, thankfully
-	[sections[sections.length], index] = parseSection(data, index, false);
+
+	try {
+		// all of the first headers seem to be not in base64, thankfully
+		[sections[sections.length], index] = parseSection(data, index, false);
+	} catch (err) {}
 	
 	index = consumeEmpty(data, index);
 	
