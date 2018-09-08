@@ -6,6 +6,7 @@ let parseControls = require('./parseControls/index.js').parseControls;
 let parseDialogue = require('./parseDialogue/index.js');
 let parseNames = require('./parseNames/index.js');
 let parseOptions = require('./parseOptions/index.js');
+let parseDat = require('./parseDat/index.js');
 let {
 	config,
 	readConfig,
@@ -99,6 +100,34 @@ function optionsParseBack(readpath, output = "./output/{filename}.txt") {
 	return output;
 }
 
+function datParse (readpath, output = "./output/{filename}.json") {
+	let file = fs.readFileSync(readpath, "utf8");
+
+	let filename = path.win32.basename(readpath, ".dat");
+
+	output = output.replace(/\{filename\}/ig, filename);
+	console.log("Filename:", filename, "\n\toutput:", output);
+	fs.writeFileSync(output, JSON.stringify(parseDat.parse(file), null, 4), "utf8");
+	console.log("Wrote " + filename + ", generated from " + readpath);
+	return output;
+}
+
+function datParseBack(readpath, output = "./output/{filename}.dat", forceUnencoded) {
+	let file = fs.readFileSync(readpath, "utf8");
+
+	let filename = path.win32.basename(readpath, ".json");
+
+	output = output.replace(/\{filename\}/ig, filename);
+
+	console.log("Filename:", filename, "\n\toutput:", output);
+
+	fs.writeFileSync(output, parseDat.parseBack(JSON.parse(file), forceUnencoded));
+
+	console.log("Wrote " + filename + ", generated from " + readpath);
+	
+	return output;
+}
+
 prompt.start();
 
 function showMainMenu() {
@@ -107,7 +136,8 @@ function showMainMenu() {
 (2) - Control Parsing
 (3) - Dialogue Parsing
 (4) - Name Parsing
-(5) - Options Parsing`);
+(5) - Options Parsing
+(6) - Dat Parsing`);
 
 	prompt.get({
 		type: 'integer',
@@ -135,6 +165,9 @@ function showMainMenu() {
 			break;
 			case 5:
 				showOptionsMenu();
+			break;
+			case 6:
+				showDatMenu();
 			break;
 		}
 	});
@@ -251,6 +284,45 @@ function showOptionsMenu () {
 			break;
 			case 3:
 				getPath(value => optionsParseBack(optionsParse(value)));
+			break;
+		}
+	});
+}
+
+function showDatMenu () {
+	console.log(`(0) Back
+(1) - Test Dat Parse
+(2) - Test Dat Parse Back
+(3) - Test Dat Parse Back Unencoded
+(4) - Test Dat Parse & Parse Back
+(5) - Test Dat Parse & Parse Back Unencoded`);
+
+	prompt.get({
+		type: 'integer',
+		message: "Input must be an integer",
+		default: 0,
+		required: true
+	}, (err, result) => {
+		let input = Number(result.question);
+
+		switch (input) {
+			case 0:
+				showMainMenu();
+			break;
+			case 1:
+				getPath(value => datParse(value));
+			break;
+			case 2:
+				getPath(value => datParseBack(value));
+			break;
+			case 3:
+				getPath(value => datParseBack(value, undefined, true));
+			break;
+			case 4:
+				getPath(value => datParseBack(datParse(value)));
+			break;
+			case 5:
+				getPath(value => datParseBack(datParse(value), undefined, true));
 			break;
 		}
 	});
