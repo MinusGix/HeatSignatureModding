@@ -316,7 +316,7 @@ function showDatMenu () {
 			case 2:
 				getPath(value => {
 					console.log("Force it to be written to a file unencoded?");
-					getYesNo(bool => datParseBack(value, undefined, bool));
+					getYesNo(bool => datParseBack(value, undefined, bool), "n");
 				});
 			break;
 			case 3:
@@ -324,7 +324,7 @@ function showDatMenu () {
 					console.log("Is the file encoded?");;
 					getYesNo(bool => {
 						console.log("Force it to be written to a file unencoded?");
-						getYesNo(bool2 => datParseBack(datParse(value, undefined, bool), undefined, bool2));
+						getYesNo(bool2 => datParseBack(datParse(value, undefined, bool), undefined, bool2), "n");
 					});
 				});
 			break;
@@ -374,10 +374,10 @@ function getPath(cb) {
 	});
 }
 
-function getYesNo (callback) { // awful name
+function getYesNo (callback, defaultValue='y') { // awful name
 	prompt.get({
 		type: 'string',
-		default: 'y',
+		default: defaultValue,
 		pattern: /^(y|yes|true|n|no|false)$/i
 	}, (err, result) => {
 		let answer = result.question;
