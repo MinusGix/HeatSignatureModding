@@ -52,12 +52,170 @@ function parseSection (data, index, encrypted=true) {
 		index = consumeEmpty(data, index);
 	}
 	
-	[section.properties, index] = parseSectionProperties(data, index, encrypted);
+	[section.properties, index] = parseSectionProperties(section.name, data, index, encrypted);
 
 	return [section, index];
 }
 
-function parseSectionProperties(data, index, encrypted=true) {
+let special = {
+	Header: {
+		string: [],
+		number: [
+			"TimeNumber",
+		],
+		boolean: [
+			"Encoded"
+		]
+	},
+
+	Character: {
+		string: [
+			'Status', // Seen: Active, Available
+			'Forename',
+			'Surname',
+			'Skin',
+			'Head',
+		],
+
+		number: [
+			'CapturedByFactionIndex',
+			'BleedOutTime',
+			'Money',
+			'PersonalMissionCost',
+			'PersonalMissionState',
+			'PersonalMissionIntel',
+			'Kills',
+			'Knockouts',
+			'TimesInjured',
+			'MissionsCompleted',
+			'MissionsTaken',
+			'ClausesTaken',
+			'ClausesCompleted',
+			'Alarms',
+			'LivingWitnesses',
+			'AveragePay',
+			'TotalLiberationProgress',
+			'EasyMissionsCompleted',
+			'MediumMissionsCompleted'
+		]
+	},
+
+	Pod: {
+		string: [
+			"PodSkin"
+		],
+		number: [
+			"PodState", // unsure
+			"SpecialPodType", // unsure
+			"PodMaxFuel"
+		]
+	},
+
+	Item: {
+		string: [
+			"Type",
+			"Name",
+			"BaseName",
+			"Slot", // this could be a tri-option thingy rather than just a string
+			"Trait",
+		],
+		number: [
+			"TimesUsed",
+			"Value",
+			"Rarity",
+			"Uses",
+		]
+	},
+
+	Mission: {
+		string: [
+			"Type"
+		],
+		number: [
+			"FactionIndex",
+			"Difficulty",
+		]
+	},
+
+	Ship: {
+		string: [
+			"KeycardGuardRole",
+		],
+		number: [
+			"MaxGuardsPerCluster",
+			"MinGuardsPerCluster",
+			"AlarmTime",
+			"TimeLimit",
+			"SentriesPerSegment",
+		],
+		boolean: [
+			"HasHeatSensors", // just guessing, but seems right
+		]
+	},
+
+	GuardKit: {
+		string: [
+			"Role",
+			"Kit",
+		]
+	},
+
+	Mission: {
+		string: [
+			"Type",
+			"Target",
+			"Description"
+		],
+		number: [
+			"FactionIndex",
+			"Bonus",
+			"Pays",
+			"Difficulty",
+		]
+	},
+
+	findKeyType (sectionName, key) {
+		if (!sectionName) return null;
+		if (!key) return null;
+
+		return special.sectionHasKey(sectionName, "string", key) ||
+			special.sectionHasKey(sectionName, "boolean", key) ||
+			special.sectionHasKey(sectionName, "number", key);
+	},
+
+	sectionHasKey (sectionName, type, key) {
+		if (
+			special[sectionName] && 
+			special[sectionName][type] && 
+			special[sectionName][type].includes(key)
+		) {
+			return type;
+		}
+
+		return null;
+	}
+}
+
+/*
+	Character:
+		Ammo[n] need a way to handle arrays well
+		Status - Probably a boolean but with two words rather than numbers/booleans
+		Accolades 
+		PersonalMissionRescueAgent
+	Pod:
+		PodThrustColor - need to implement color storage
+	Item:
+		TextColour
+	Mission:
+	Ship:
+		PracticeTutorialShip - Unsure if boolean or number
+		PracticeLayout - Unsure if boolean or number
+	Mission:
+		Context
+		LovedOne
+*/
+
+function parseSectionProperties(sectionName, data, index, encrypted=true) {
 	let properties = [];
 
 	while(data[index] && index < data.length) {
@@ -66,6 +224,21 @@ function parseSectionProperties(data, index, encrypted=true) {
 		try {
 			let name = text.match(/.*(?=\ \=\ )/)[0];
 			let value = text.match(/(?<= = ).*/)[0];
+
+			let type = special.findKeyType(sectionName, name);
+
+			if (type === 'string') {} // can just ignore this since by default it's a string
+			else if (type === 'number') {
+				value = Number(value);
+			} else if (type === 'boolean') {
+				if (value === '0' || value === 'false') {
+					value = false;
+				} else if (value === '1' || value === 'true') {
+					value = true;
+				} else {
+					throw new Error("Type was set to boolean in code but it wasn't recognized as one :(");
+				}
+			}
 
 			properties.push({
 				type: "property",
