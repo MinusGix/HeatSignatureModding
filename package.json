@@ -1,0 +1,19 @@
+{
+  "name": "heatsignaturemodding",
+  "version": "1.0.0",
+  "description": "Tools for modding or messing with the game Heat Signature",
+  "main": "main.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "node-fetch": "^2.2.0",
+    "prompt": "^1.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "node main.js"
+  },
+  "author": "MinusGix",
+  "license": "ISC"
+}
