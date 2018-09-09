@@ -18,3 +18,7 @@ TODO:
 	- Find a way to unpack the character/enemy textures from the game
 	- Find a way to make deeper modifications to the game. (Such as making weapon's different for everyone) It might be viable to make edits for your characters items, but thats just for that singular item. (I believe, I haven't actually done any character modification)
 	- Find a way to disable item sharing if the game is modded. This might happen already, as there is a checksum in several of the files, but I haven't tested.
+
+
+Interesting Other Heat Signature Projects:
+- https://yal.cc/r/17/heatsig/ this one is a character editor, looks way better than mine. Did not know about it when I made this (tho I haven't actually made a character editor just a parser for dat files which they are)
