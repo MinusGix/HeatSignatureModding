@@ -267,7 +267,23 @@ function parseBack (sections, forceUnencoded=false) {
 		base64encode('<' + section.name + '>', forceUnencoded ? false : section.encrypted) + '\n' + 
 		section.properties.map(prop => {
 			if (prop.type === "property") {
-				return base64encode(prop.name + " = " + prop.value, forceUnencoded ? false : prop.encrypted) + '\n';
+				let type = special.findKeyType(section.name, prop.name);
+				let value = prop.value;
+
+				if (type === 'string') {} // it's already string, ignore it
+				else if (type === 'number') {
+					value = String(value);
+				} else if (type === 'boolean') {
+					if (value === 0 || value === false) {
+						value = '0';
+					} else if (value === 1 || value === true) {
+						value = '1;'
+					} else {
+						throw new Error('Problem in converting boolean back to string as it wasnt a boolean :c');
+					}
+				}
+
+				return base64encode(prop.name + " = " + value, forceUnencoded ? false : prop.encrypted) + '\n';
 			} else if (prop.type === "text") {
 				return base64encode(prop.value, forceUnencoded ? false : prop.encrypted) + '\n';
 			} else {
