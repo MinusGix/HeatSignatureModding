@@ -64,3 +64,8 @@ CreateFile /Progress.dat
 
 CreateFile /Options.txt
 
+Launch Options:
+You can use
+`-output file.txt`
+`-debugoutput debugfile.txt`
+Will output information to those files. Could be useful.
