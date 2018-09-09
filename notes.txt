@@ -69,3 +69,4 @@ You can use
 `-output file.txt`
 `-debugoutput debugfile.txt`
 Will output information to those files. Could be useful.
+`-debug` Seems to only show a fps bar in the top left corner.
